@@ -32,13 +32,13 @@ class JankenHand {
   winTo(hisHand) {
     switch(this) {
       case JankenHandEnum.Rock:
-        return hisHand === JankenHandEnum.Scissors;
-        break;
-      case JankenHandEnum.Scissors:
         return hisHand === JankenHandEnum.Paper;
         break;
-      case JankenHandEnum.Paper:
+      case JankenHandEnum.Scissors:
         return hisHand === JankenHandEnum.Rock;
+        break;
+      case JankenHandEnum.Paper:
+        return hisHand === JankenHandEnum.Scissors;
         break;
       default:
         throw new Error("hisHandが不正です。" + hisHand);
@@ -96,17 +96,17 @@ class ChottoKashikoiStrategy extends JankenStrategy {
   }
 
   nextHand() {
-    // 初回は前回の手がないためランダムとする
+    // 初回はグー
     if(!this.myHand || !this.hisHand) {
-      return new RandomStrategy().nextHand();
+      return JankenHandEnum.Rock;
     }
 
     if(this.myHand.winTo(this.hisHand)) {
       // 自分が勝った場合は、同じ手を使う
-      return this.myHand;
+      return new RandomStrategy().nextHand();
     } else if(this.myHand.loseTo(this.hisHand)) {
       // あいてが勝った場合は、あいての手を使う
-      return this.hisHand;
+      return this.myHand;
     } else {
       return new RandomStrategy().nextHand();
     }
@@ -136,8 +136,8 @@ class Player {
 
 // -----------------------------------
 
-const player1 = new Player("Taro");
-const player2 = new Player("Hanako", new ChottoKashikoiStrategy());
+const player1 = new Player("Kato");
+const player2 = new Player("Miwako", new ChottoKashikoiStrategy());
 
 let player1Win = 0;
 let player2Win = 0;
